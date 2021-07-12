@@ -41,7 +41,7 @@ export const EditEvent = () => {
                 id: event.id,
                 ...values,
               })
-              await setQueryData(updated)
+              await setQueryData({ ...updated, timeslots: event.timeslots })
               router.push(Routes.ShowEventPage({ eventId: updated.id }))
             } catch (error) {
               console.error(error)
