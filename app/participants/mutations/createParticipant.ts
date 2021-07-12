@@ -5,6 +5,7 @@ import { z } from "zod"
 const CreateParticipant = z.object({
   name: z.string(),
   timeslotId: z.number(),
+  ready: z.boolean(),
 })
 
 export default resolver.pipe(
