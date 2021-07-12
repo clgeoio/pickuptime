@@ -2,16 +2,16 @@ import { resolver, NotFoundError } from "blitz"
 import db from "db"
 import { z } from "zod"
 
-const GetEvent = z.object({
+const GetTimeslot = z.object({
   // This accepts type of undefined, but is required at runtime
   id: z.number().optional().refine(Boolean, "Required"),
 })
 
-export default resolver.pipe(resolver.zod(GetEvent), resolver.authorize(), async ({ id }) => {
+export default resolver.pipe(resolver.zod(GetTimeslot), resolver.authorize(), async ({ id }) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const event = await db.event.findFirst({ where: { id }, include: { timeslots: true } })
+  const timeslot = await db.timeslot.findFirst({ where: { id } })
 
-  if (!event) throw new NotFoundError()
+  if (!timeslot) throw new NotFoundError()
 
-  return event
+  return timeslot
 })

@@ -65,8 +65,20 @@ model Token {
 // }
 
 model Event {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   name      String
+  date      DateTime   @default(now())
+  timeslots Timeslot[]
+}
+
+model Timeslot {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  event        Event    @relation(fields: [eventId], references: [id])
+  eventId      Int
+  participants String[]
+  date         DateTime
 }

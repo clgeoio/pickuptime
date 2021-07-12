@@ -7,7 +7,7 @@ const DeleteEvent = z.object({
 })
 
 export default resolver.pipe(resolver.zod(DeleteEvent), resolver.authorize(), async ({ id }) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+  await db.timeslot.deleteMany({ where: { eventId: id } })
   const event = await db.event.deleteMany({ where: { id } })
 
   return event
