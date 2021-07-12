@@ -30,10 +30,6 @@ export const EditEvent = () => {
 
         <EventForm
           submitText="Update Event"
-          // TODO use a zod schema for form validation
-          //  - Tip: extract mutation's schema into a shared `validations.ts` file and
-          //         then import and use it here
-          // schema={UpdateEvent}
           initialValues={event}
           onSubmit={async (values) => {
             try {
