@@ -5,6 +5,8 @@ import { z } from "zod"
 const UpdateEvent = z.object({
   id: z.number(),
   name: z.string(),
+  date: z.date(),
+  timeslots: z.array(z.object({ date: z.date(), participants: z.array(z.string()) })),
 })
 
 export default resolver.pipe(
