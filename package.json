@@ -24,13 +24,19 @@
     ]
   },
   "dependencies": {
+    "@chakra-ui/icons": "1.0.14",
+    "@chakra-ui/react": "1.6.5",
+    "@emotion/react": "11.4.0",
+    "@emotion/styled": "11.3.0",
     "@prisma/client": "2.26.0",
     "blitz": "0.38.5",
     "date-fns": "2.22.1",
     "final-form": "4.20.2",
+    "framer-motion": "4.1.17",
     "react": "alpha",
     "react-dom": "alpha",
     "react-final-form": "6.5.3",
+    "react-icons": "4.2.0",
     "zod": "3.5.1"
   },
   "devDependencies": {
