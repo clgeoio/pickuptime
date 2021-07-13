@@ -52,9 +52,8 @@ const NewEventPage: BlitzPage = () => {
 
             const timeslots = generateTimeSlots({ start, end, interval }).map((slot) => ({
               date: slot,
-              participants: [],
             }))
-            console.log(timeslots)
+
             const event = await createEventMutation({ date, ...values, timeslots })
             await router.push(Routes.ShowEventPage({ eventId: event.id }))
           } catch (error) {

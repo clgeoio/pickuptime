@@ -5,8 +5,6 @@ import { z } from "zod"
 const UpdateParticipant = z.object({
   id: z.number(),
   name: z.string(),
-  timeslotId: z.number(),
-  ready: z.boolean(),
 })
 
 export default resolver.pipe(

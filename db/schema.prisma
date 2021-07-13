@@ -90,5 +90,5 @@ model Participant {
   timeslot   Timeslot @relation(fields: [timeslotId], references: [id])
   timeslotId Int
   name       String
-  ready      Boolean
+  ready      Boolean  @default(false)
 }

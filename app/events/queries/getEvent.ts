@@ -9,7 +9,10 @@ const GetEvent = z.object({
 
 export default resolver.pipe(resolver.zod(GetEvent), resolver.authorize(), async ({ id }) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const event = await db.event.findFirst({ where: { id }, include: { timeslots: true } })
+  const event = await db.event.findFirst({
+    where: { id },
+    include: { timeslots: { include: { participants: true } } },
+  })
 
   if (!event) throw new NotFoundError()
 

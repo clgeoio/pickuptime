@@ -2,20 +2,24 @@ import { resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
 
-const UpdateEvent = z.object({
+const UpdateTimeslot = z.object({
   id: z.number(),
   name: z.string(),
-  date: z.date(),
-  timeslots: z.array(z.object({ timeslotId: z.number() })),
+  participants: z.array(
+    z.object({
+      name: z.string(),
+      ready: z.boolean(),
+    })
+  ),
 })
 
 export default resolver.pipe(
-  resolver.zod(UpdateEvent),
+  resolver.zod(UpdateTimeslot),
   resolver.authorize(),
   async ({ id, ...data }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const event = await db.event.update({ where: { id }, data })
+    const timeslot = await db.timeslot.update({ where: { id }, data })
 
-    return event
+    return timeslot
   }
 )
