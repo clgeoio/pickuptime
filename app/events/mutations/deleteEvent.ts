@@ -7,6 +7,7 @@ const DeleteEvent = z.object({
 })
 
 export default resolver.pipe(resolver.zod(DeleteEvent), resolver.authorize(), async ({ id }) => {
+  await db.participant.deleteMany({ where: { eventId: id } })
   await db.timeslot.deleteMany({ where: { eventId: id } })
   const event = await db.event.deleteMany({ where: { id } })
 

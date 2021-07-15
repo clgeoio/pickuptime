@@ -8,10 +8,20 @@ import {
   Tag,
   TagLabel,
   Button,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
 } from "@chakra-ui/react"
+import { useLocalStorage } from "app/core/hooks/useLocalStorage"
 import { format } from "date-fns"
 import { Participant, Timeslot } from "db"
-import React, { FunctionComponent } from "react"
+import React, { ChangeEventHandler, FunctionComponent, useState } from "react"
 import { BiTimeFive, BiCheck, BiPlus, BiX } from "react-icons/bi"
 import { BsPeopleFill } from "react-icons/bs"
 
@@ -21,7 +31,7 @@ interface CardProps {
   timeslots: (Timeslot & {
     participants: Participant[]
   })[]
-  addParticipant: (timeslotId: number) => void
+  addParticipant: (timeslotId: number, name: string) => Promise<number | undefined>
   removeParticipant: (participantId: number) => void
 }
 
@@ -54,7 +64,28 @@ const Card: FunctionComponent<CardProps> = ({
   addParticipant,
   removeParticipant,
 }) => {
+  const [participantId, setParticipantId] = useLocalStorage("participantId")
+  const [timeslotId, setTimeslotId] = useState<number | undefined>()
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const timeColor = useColorModeValue("gray.600", "gray.400")
+  const handleOpen = (timeslotId: number) => {
+    setTimeslotId(timeslotId)
+    onOpen()
+  }
+
+  const handleAddParticipant = async (name: string) => {
+    if (timeslotId !== undefined) {
+      const id = await addParticipant(timeslotId, name)
+      setTimeslotId(undefined)
+      setParticipantId(id)
+    }
+  }
+
+  const handleRemoveParticipant = (participantId: number) => {
+    removeParticipant(participantId)
+    setParticipantId(undefined)
+  }
+
   return (
     <Flex
       bg={useColorModeValue("#F9FAFB", "gray.600")}
@@ -97,26 +128,68 @@ const Card: FunctionComponent<CardProps> = ({
                 {slot.participants.map((participant) => (
                   <Flex mt={2} mb={2} key={participant.id} justifyContent="space-between">
                     <Text>{participant.name}</Text>
-                    <Icon
-                      as={BiX}
-                      h={6}
-                      w={6}
-                      fill="red.700"
-                      _hover={{ cursor: "pointer" }}
-                      onClick={() => removeParticipant(participant.id)}
-                    />
+                    {participantId === participant.id && (
+                      <Icon
+                        as={BiX}
+                        h={6}
+                        w={6}
+                        fill="red.700"
+                        _hover={{ cursor: "pointer" }}
+                        onClick={() => handleRemoveParticipant(participant.id)}
+                      />
+                    )}
                   </Flex>
                 ))}
-                <Button w="full" size="sm" onClick={() => addParticipant(slot.id)}>
-                  <Icon as={BiPlus} h={4} w={4} />
-                  Join {format(slot.date, "KK:mm aa")}
-                </Button>
+                {participantId === undefined && (
+                  <Button w="full" size="sm" onClick={() => handleOpen(slot.id)}>
+                    <Icon as={BiPlus} h={4} w={4} />
+                    Join {format(slot.date, "KK:mm aa")}
+                  </Button>
+                )}
               </Box>
             </Flex>
           ))}
         </Box>
       </Box>
+      <NameModal isOpen={isOpen} onClose={onClose} handleNameAdd={handleAddParticipant} />
     </Flex>
+  )
+}
+
+const NameModal: FunctionComponent<{
+  isOpen: boolean
+  onClose: () => void
+  handleNameAdd: (name: string) => void
+}> = ({ onClose, isOpen, handleNameAdd }) => {
+  const [value, setValue] = useState("")
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => setValue(event.target.value)
+
+  const handleAdd = () => {
+    handleNameAdd(value)
+    setValue("")
+    onClose()
+  }
+
+  return (
+    <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Modal Title</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text mb={2}>Name:</Text>
+            <Input value={value} onChange={handleChange} placeholder="Jane S." size="sm" />
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="ghost">Cancel</Button>
+            <Button colorScheme="blue" mr={3} onClick={handleAdd}>
+              Add
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   )
 }
 
