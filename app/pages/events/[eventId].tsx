@@ -11,7 +11,7 @@ import deleteParticipant from "app/participants/mutations/deleteParticipant"
 export const Event = () => {
   const router = useRouter()
   const user = useCurrentUser()
-  const eventId = useParam("eventId", "number")
+  const eventId = useParam("eventId", "string")
   const [deleteEventMutation] = useMutation(deleteEvent)
   const [createParticipantMutation] = useMutation(createParticipant)
   const [deleteParticipantMutation] = useMutation(deleteParticipant)
@@ -20,10 +20,10 @@ export const Event = () => {
   })
 
   const handleAddParticipant = async (timeslotId: number, name: string) => {
-    if (eventId) {
+    if (id) {
       const participant = await createParticipantMutation({
         timeslotId,
-        eventId,
+        eventId: id,
         name,
         ready: false,
       })

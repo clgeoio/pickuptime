@@ -65,7 +65,7 @@ model Token {
 // }
 
 model Event {
-  id           Int           @id @default(autoincrement())
+  id           String        @id @default(cuid())
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   name         String
@@ -79,7 +79,7 @@ model Timeslot {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   event        Event         @relation(fields: [eventId], references: [id])
-  eventId      Int
+  eventId      String
   date         DateTime
   participants Participant[]
 }
@@ -93,5 +93,5 @@ model Participant {
   name       String
   ready      Boolean  @default(false)
   event      Event    @relation(fields: [eventId], references: [id])
-  eventId    Int
+  eventId    String
 }

@@ -7,7 +7,7 @@ import { EventForm, FORM_ERROR } from "app/events/components/EventForm"
 
 export const EditEvent = () => {
   const router = useRouter()
-  const eventId = useParam("eventId", "number")
+  const eventId = useParam("eventId", "string")
   const [event, { setQueryData }] = useQuery(
     getEvent,
     { id: eventId },

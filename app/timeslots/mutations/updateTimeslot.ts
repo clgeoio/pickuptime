@@ -4,7 +4,7 @@ import { z } from "zod"
 
 const UpdateTimeslot = z.object({
   id: z.number(),
-  eventId: z.number(),
+  eventId: z.string(),
   name: z.string(),
   participants: z.array(
     z.object({

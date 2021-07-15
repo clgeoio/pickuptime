@@ -5,7 +5,7 @@ import { z } from "zod"
 const CreateParticipant = z.object({
   name: z.string(),
   timeslotId: z.number(),
-  eventId: z.number(),
+  eventId: z.string(),
   ready: z.boolean(),
 })
 

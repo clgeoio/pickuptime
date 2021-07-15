@@ -3,7 +3,7 @@ import db from "db"
 import { z } from "zod"
 
 const UpdateEvent = z.object({
-  id: z.number(),
+  id: z.string(),
   name: z.string(),
   date: z.date(),
   timeslots: z.array(z.object({ timeslotId: z.number() })),
