@@ -34,6 +34,7 @@
     "final-form": "4.20.2",
     "framer-motion": "4.1.17",
     "react": "alpha",
+    "react-datepicker": "4.1.1",
     "react-dom": "alpha",
     "react-final-form": "6.5.3",
     "react-icons": "4.2.0",

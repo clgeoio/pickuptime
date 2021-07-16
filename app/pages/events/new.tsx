@@ -3,6 +3,7 @@ import Layout from "app/core/layouts/Layout"
 import createEvent from "app/events/mutations/createEvent"
 import { EventForm, FORM_ERROR } from "app/events/components/EventForm"
 import { isBefore, addMinutes, isEqual, startOfDay } from "date-fns"
+import { Heading, Box, Flex } from "@chakra-ui/react"
 
 const generateTimeSlots = ({
   start,
@@ -34,37 +35,40 @@ const NewEventPage: BlitzPage = () => {
 
   return (
     <div>
-      <h1>Create New Event</h1>
+      <Heading size="lg">Create New Event</Heading>
 
-      <EventForm
-        submitText="Create Event"
-        // TODO use a zod schema for form validation
-        //  - Tip: extract mutation's schema into a shared `validations.ts` file and
-        //         then import and use it here
-        // schema={CreateEvent}
-        // initialValues={{}}
-        onSubmit={async (values) => {
-          try {
-            const date = startOfDay(new Date())
-            const interval = parseInt(values.slotTime)
-            const start = new Date().setHours(16, 30, 0, 0)
-            const end = new Date(start).setHours(19, 0, 0, 0)
+      <Flex width="full" alignItems="center" justifyContent="center">
+        <Box bg="white" boxShadow="sm" p={6} borderRadius="md" maxW="lg" w="full">
+          <EventForm
+            submitText="Create Event"
+            // TODO use a zod schema for form validation
+            //  - Tip: extract mutation's schema into a shared `validations.ts` file and
+            //         then import and use it here
+            // schema={CreateEvent}
+            // initialValues={{}}
+            onSubmit={async (values) => {
+              try {
+                const date = startOfDay(values.date)
+                const interval = parseInt(values.slotTime)
+                const start = new Date(date).setHours(16, 30, 0, 0)
+                const end = new Date(start).setHours(19, 0, 0, 0)
 
-            const timeslots = generateTimeSlots({ start, end, interval }).map((slot) => ({
-              date: slot,
-            }))
+                const timeslots = generateTimeSlots({ start, end, interval }).map((slot) => ({
+                  date: slot,
+                }))
 
-            const event = await createEventMutation({ date, ...values, timeslots })
-            await router.push(Routes.ShowEventPage({ eventId: event.id }))
-          } catch (error) {
-            console.error(error)
-            return {
-              [FORM_ERROR]: error.toString(),
-            }
-          }
-        }}
-      />
-
+                const event = await createEventMutation({ date, ...values, timeslots })
+                await router.push(Routes.ShowEventPage({ eventId: event.id }))
+              } catch (error) {
+                console.error(error)
+                return {
+                  [FORM_ERROR]: error.toString(),
+                }
+              }
+            }}
+          />
+        </Box>
+      </Flex>
       <p>
         <Link href={Routes.EventsPage()}>
           <a>Events</a>

@@ -31,8 +31,9 @@ interface CardProps {
   timeslots: (Timeslot & {
     participants: Participant[]
   })[]
-  addParticipant: (timeslotId: number, name: string) => Promise<number | undefined>
+  addParticipant: (timeslotId: number, name: string) => void
   removeParticipant: (participantId: number) => void
+  participantId: number | undefined
 }
 
 interface TagsProps {
@@ -63,8 +64,8 @@ const Card: FunctionComponent<CardProps> = ({
   timeslots,
   addParticipant,
   removeParticipant,
+  participantId,
 }) => {
-  const [participantId, setParticipantId] = useLocalStorage("participantId")
   const [timeslotId, setTimeslotId] = useState<number | undefined>()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const timeColor = useColorModeValue("gray.600", "gray.400")
@@ -77,13 +78,11 @@ const Card: FunctionComponent<CardProps> = ({
     if (timeslotId !== undefined) {
       const id = await addParticipant(timeslotId, name)
       setTimeslotId(undefined)
-      setParticipantId(id)
     }
   }
 
   const handleRemoveParticipant = (participantId: number) => {
     removeParticipant(participantId)
-    setParticipantId(undefined)
   }
 
   return (
@@ -175,14 +174,16 @@ const NameModal: FunctionComponent<{
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Join Timeslot</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Text mb={2}>Name:</Text>
             <Input value={value} onChange={handleChange} placeholder="Jane S." size="sm" />
           </ModalBody>
           <ModalFooter>
-            <Button variant="ghost">Cancel</Button>
+            <Button variant="ghost" onClick={onClose} mr={2}>
+              Cancel
+            </Button>
             <Button colorScheme="blue" mr={3} onClick={handleAdd}>
               Add
             </Button>
