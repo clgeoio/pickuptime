@@ -1,5 +1,5 @@
 import React, { Suspense, useMemo, useState } from "react"
-import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from "blitz"
+import { Head, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getEvent from "app/events/queries/getEvent"
 import deleteEvent from "app/events/mutations/deleteEvent"
@@ -18,6 +18,7 @@ import {
   Flex,
 } from "@chakra-ui/react"
 import { useLocalStorage } from "app/core/hooks/useLocalStorage"
+import { format } from "date-fns"
 
 export const Event = () => {
   const router = useRouter()
@@ -63,7 +64,9 @@ export const Event = () => {
   return (
     <>
       <Head>
-        <title>Event {id}</title>
+        <title>
+          {name} - {format(date, "dd/mm/yy")}
+        </title>
       </Head>
       <Flex direction="column">
         {showAdded && (
