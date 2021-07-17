@@ -1,5 +1,6 @@
-import React, { Suspense, useMemo, useState } from "react"
+import React, { Suspense, useEffect, useMemo, useState } from "react"
 import { Head, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from "blitz"
+import Pusher from "pusher-js"
 import Layout from "app/core/layouts/Layout"
 import getEvent from "app/events/queries/getEvent"
 import deleteEvent from "app/events/mutations/deleteEvent"
@@ -28,17 +29,29 @@ export const Event = () => {
   const [createParticipantMutation] = useMutation(createParticipant)
   const [deleteParticipantMutation] = useMutation(deleteParticipant)
   const [participantId, setParticipantId] = useLocalStorage(`participantId-${eventId}`)
+  const [organizerView, setOrganizerView] = useLocalStorage("organizerView", false)
   const [showAdded, setShowAdded] = useState(false)
   const [{ id, date, name, timeslots }, { refetch: refetchEvent }] = useQuery(getEvent, {
     id: eventId,
   })
 
+  useEffect(() => {
+    const pusher = new Pusher("95fbbd446a25b7ad3518", {
+      cluster: "ap4",
+    })
+
+    const channel = pusher.subscribe(`public-${eventId}`)
+    channel.bind("participantChange", () => {
+      refetchEvent()
+    })
+  }, [eventId, refetchEvent])
+
   const filteredSlots = useMemo(() => {
-    if (participantId) {
+    if (participantId && !organizerView) {
       return timeslots.filter((slot) => slot.participants.map((p) => p.id).includes(participantId))
     }
     return timeslots
-  }, [timeslots, participantId])
+  }, [timeslots, participantId, organizerView])
 
   const handleAddParticipant = async (timeslotId: number, name: string) => {
     if (id) {
@@ -48,7 +61,6 @@ export const Event = () => {
         name,
         ready: false,
       })
-      await refetchEvent()
       setParticipantId(participant.id)
       setShowAdded(true)
     }
@@ -94,6 +106,8 @@ export const Event = () => {
           addParticipant={handleAddParticipant}
           removeParticipant={handleRemoveParticipant}
           participantId={participantId}
+          organizerView={organizerView}
+          toggleOrganizerView={() => setOrganizerView(!organizerView)}
         />
       </Flex>
       {user && (

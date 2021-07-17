@@ -16,7 +16,10 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  FormControl,
+  FormLabel,
   useDisclosure,
+  Switch,
 } from "@chakra-ui/react"
 import { useLocalStorage } from "app/core/hooks/useLocalStorage"
 import { format } from "date-fns"
@@ -34,6 +37,8 @@ interface CardProps {
   addParticipant: (timeslotId: number, name: string) => void
   removeParticipant: (participantId: number) => void
   participantId: number | undefined
+  organizerView: boolean
+  toggleOrganizerView: () => void
 }
 
 interface TagsProps {
@@ -65,6 +70,8 @@ const Card: FunctionComponent<CardProps> = ({
   addParticipant,
   removeParticipant,
   participantId,
+  organizerView,
+  toggleOrganizerView,
 }) => {
   const [timeslotId, setTimeslotId] = useState<number | undefined>()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -115,9 +122,20 @@ const Card: FunctionComponent<CardProps> = ({
         </Flex>
 
         <Box mt={2}>
-          <Text color={timeColor} mb={3}>
-            Timeslots
-          </Text>
+          <Flex w="full" alignItems="center" justifyContent="space-between" mb={4}>
+            <Text color={timeColor}>Timeslots</Text>
+            <Flex display="flex" alignItems="center" w="fit-content">
+              <Text mr={2} color={timeColor} fontSize="xs">
+                Organizer View
+              </Text>
+              <Switch
+                id="organizer-view"
+                isChecked={organizerView}
+                onChange={() => toggleOrganizerView()}
+              />
+            </Flex>
+          </Flex>
+
           {timeslots.map((slot) => (
             <Flex key={slot.id} width="full" mb={8} flexDirection="column">
               <Flex alignItems="center" justifyContent="space-between" width="full">
@@ -143,7 +161,7 @@ const Card: FunctionComponent<CardProps> = ({
                     )}
                   </Flex>
                 ))}
-                {participantId === undefined && (
+                {participantId === undefined && !organizerView && (
                   <Button w="full" size="sm" onClick={() => handleOpen(slot.id)}>
                     <Icon as={BiPlus} h={4} w={4} />
                     Join {format(slot.date, "KK:mm aa")}

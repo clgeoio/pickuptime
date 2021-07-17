@@ -1,6 +1,7 @@
 import { resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
+import Pusher from "pusher"
 
 const CreateEvent = z.object({
   name: z.string(),
