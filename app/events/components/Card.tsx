@@ -20,6 +20,7 @@ import {
   FormLabel,
   useDisclosure,
   Switch,
+  Checkbox,
 } from "@chakra-ui/react"
 import { useLocalStorage } from "app/core/hooks/useLocalStorage"
 import { format } from "date-fns"
@@ -83,7 +84,7 @@ const Card: FunctionComponent<CardProps> = ({
 
   const handleAddParticipant = async (name: string) => {
     if (timeslotId !== undefined) {
-      const id = await addParticipant(timeslotId, name)
+      addParticipant(timeslotId, name)
       setTimeslotId(undefined)
     }
   }
@@ -148,7 +149,11 @@ const Card: FunctionComponent<CardProps> = ({
               <Box mt={2} ml={{ base: 0, md: 6 }} flexDirection="row">
                 {slot.participants.map((participant) => (
                   <Flex mt={2} mb={2} key={participant.id} justifyContent="space-between">
-                    <Text>{participant.name}</Text>
+                    <Flex>
+                      {organizerView && <Checkbox mr={3} />}
+                      <Text>{participant.name}</Text>
+                    </Flex>
+
                     {participantId === participant.id && (
                       <Icon
                         as={BiX}
