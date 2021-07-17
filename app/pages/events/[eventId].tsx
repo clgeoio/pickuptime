@@ -1,4 +1,4 @@
-import React, { Suspense, useMemo } from "react"
+import React, { Suspense, useMemo, useState } from "react"
 import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getEvent from "app/events/queries/getEvent"
@@ -7,8 +7,16 @@ import { Card } from "app/events/components/Card"
 import createParticipant from "app/participants/mutations/createParticipant"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import deleteParticipant from "app/participants/mutations/deleteParticipant"
-import { Button, Flex } from "@chakra-ui/react"
-import { useState } from "react"
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Box,
+  Button,
+  CloseButton,
+  Flex,
+} from "@chakra-ui/react"
 import { useLocalStorage } from "app/core/hooks/useLocalStorage"
 
 export const Event = () => {
@@ -18,7 +26,8 @@ export const Event = () => {
   const [deleteEventMutation] = useMutation(deleteEvent)
   const [createParticipantMutation] = useMutation(createParticipant)
   const [deleteParticipantMutation] = useMutation(deleteParticipant)
-  const [participantId, setParticipantId] = useLocalStorage("participantId")
+  const [participantId, setParticipantId] = useLocalStorage(`participantId-${eventId}`)
+  const [showAdded, setShowAdded] = useState(false)
   const [{ id, date, name, timeslots }, { refetch: refetchEvent }] = useQuery(getEvent, {
     id: eventId,
   })
@@ -40,12 +49,14 @@ export const Event = () => {
       })
       await refetchEvent()
       setParticipantId(participant.id)
+      setShowAdded(true)
     }
   }
 
   const handleRemoveParticipant = async (participantId: number) => {
     await deleteParticipantMutation({ id: participantId })
     setParticipantId(undefined)
+    setShowAdded(false)
     await refetchEvent()
   }
 
@@ -54,7 +65,25 @@ export const Event = () => {
       <Head>
         <title>Event {id}</title>
       </Head>
-      <Flex>
+      <Flex direction="column">
+        {showAdded && (
+          <Alert status="success" mb={5}>
+            <AlertIcon />
+            <Box flex="1">
+              <AlertTitle>Success!</AlertTitle>
+              <AlertDescription display="block">
+                You have been added to the timeslot
+              </AlertDescription>
+            </Box>
+            <CloseButton
+              position="absolute"
+              right="8px"
+              top="8px"
+              onClick={() => setShowAdded(false)}
+            />
+          </Alert>
+        )}
+
         <Card
           title={name}
           date={date}

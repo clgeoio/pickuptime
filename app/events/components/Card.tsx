@@ -48,12 +48,12 @@ const Tags: FunctionComponent<TagsProps> = ({ participants }) => {
         </Text>
         <Icon as={BsPeopleFill} h={4} w={4} />
       </Tag>
-      <Tag size="sm" variant="subtle" colorScheme="green">
+      {/* <Tag size="sm" variant="subtle" colorScheme="green">
         <Text as="span" fontWeight="bold" mr={1}>
           {participants.filter((p) => p.ready).length}
         </Text>
         <Icon as={BiCheck} h={4} w={4} />
-      </Tag>
+      </Tag> */}
     </Flex>
   )
 }
@@ -102,10 +102,14 @@ const Card: FunctionComponent<CardProps> = ({
         w="full"
       >
         <Flex justifyContent="space-between" alignItems="center">
-          <Heading size="lg" color={useColorModeValue("gray.700", "white")} mr={6}>
+          <Heading
+            fontSize={{ base: "md", md: "lg" }}
+            color={useColorModeValue("gray.700", "white")}
+            mr={6}
+          >
             {title}
           </Heading>
-          <Text fontSize="lg" color={timeColor}>
+          <Text fontSize={{ base: "md", md: "lg" }} color={timeColor}>
             {format(date, "eee do")}
           </Text>
         </Flex>
@@ -123,7 +127,7 @@ const Card: FunctionComponent<CardProps> = ({
                 </Flex>
                 <Tags participants={slot.participants} />
               </Flex>
-              <Box mt={2} ml={6} flexDirection="row">
+              <Box mt={2} ml={{ base: 0, md: 6 }} flexDirection="row">
                 {slot.participants.map((participant) => (
                   <Flex mt={2} mb={2} key={participant.id} justifyContent="space-between">
                     <Text>{participant.name}</Text>

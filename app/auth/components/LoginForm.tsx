@@ -44,9 +44,9 @@ export const LoginForm = (props: LoginFormProps) => {
         </div>
       </Form>
 
-      <div style={{ marginTop: "1rem" }}>
+      {/* <div style={{ marginTop: "1rem" }}>
         Or <Link href={Routes.SignupPage()}>Sign Up</Link>
-      </div>
+      </div> */}
     </div>
   )
 }
