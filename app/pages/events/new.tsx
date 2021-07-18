@@ -50,7 +50,7 @@ const NewEventPage: BlitzPage = () => {
               try {
                 const date = startOfDay(values.date)
                 const interval = parseInt(values.slotTime)
-                const start = new Date(date).setHours(16, 30, 0, 0)
+                const start = new Date(date).setHours(17, 0, 0, 0)
                 const end = new Date(start).setHours(19, 0, 0, 0)
 
                 const timeslots = generateTimeSlots({ start, end, interval }).map((slot) => ({
