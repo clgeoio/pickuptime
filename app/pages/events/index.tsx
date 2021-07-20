@@ -2,6 +2,7 @@ import { Suspense } from "react"
 import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getEvents from "app/events/queries/getEvents"
+import { Button, Box, List, ListItem } from "@chakra-ui/react"
 
 const ITEMS_PER_PAGE = 100
 
@@ -18,24 +19,23 @@ export const EventsList = () => {
   const goToNextPage = () => router.push({ query: { page: page + 1 } })
 
   return (
-    <div>
-      <ul>
+    <Box>
+      <List mb={4} ml={4}>
         {events.map((event) => (
-          <li key={event.id}>
+          <ListItem key={event.id}>
             <Link href={Routes.ShowEventPage({ eventId: event.id })}>
               <a>{event.name}</a>
             </Link>
-          </li>
+          </ListItem>
         ))}
-      </ul>
-
-      <button disabled={page === 0} onClick={goToPreviousPage}>
+      </List>
+      <Button mr={3} disabled={page === 0} onClick={goToPreviousPage}>
         Previous
-      </button>
-      <button disabled={!hasMore} onClick={goToNextPage}>
+      </Button>
+      <Button disabled={!hasMore} onClick={goToNextPage}>
         Next
-      </button>
-    </div>
+      </Button>
+    </Box>
   )
 }
 
@@ -47,11 +47,11 @@ const EventsPage: BlitzPage = () => {
       </Head>
 
       <div>
-        <p>
+        <Box mb={3}>
           <Link href={Routes.NewEventPage()}>
-            <a>Create Event</a>
+            <Button>Create Event</Button>
           </Link>
-        </p>
+        </Box>
 
         <Suspense fallback={<div>Loading...</div>}>
           <EventsList />

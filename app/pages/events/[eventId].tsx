@@ -1,5 +1,19 @@
 import React, { Suspense, useEffect, useMemo, useState } from "react"
-import { Head, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from "blitz"
+import {
+  Head,
+  useRouter,
+  useQuery,
+  useParam,
+  BlitzPage,
+  useMutation,
+  Routes,
+  invokeWithMiddleware,
+  QueryClient,
+  getQueryKey,
+  dehydrate,
+  Ctx,
+  GetServerSideProps,
+} from "blitz"
 import Pusher from "pusher-js"
 import Layout from "app/core/layouts/Layout"
 import getEvent from "app/events/queries/getEvent"
@@ -31,9 +45,10 @@ export const Event = () => {
   const [participantId, setParticipantId] = useLocalStorage(`participantId-${eventId}`)
   const [organizerView, setOrganizerView] = useLocalStorage("organizerView", false)
   const [showAdded, setShowAdded] = useState(false)
-  const [{ id, date, name, timeslots }, { refetch: refetchEvent }] = useQuery(getEvent, {
+  const [event, { refetch: refetchEvent }] = useQuery(getEvent, {
     id: eventId,
   })
+  const { id, name, timeslots, date } = event
 
   useEffect(() => {
     const pusher = new Pusher("95fbbd446a25b7ad3518", {
@@ -136,6 +151,21 @@ const ShowEventPage: BlitzPage = () => {
       <Event />
     </Suspense>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const queryClient = new QueryClient()
+  const queryKey = getQueryKey(getEvent)
+
+  await queryClient.prefetchQuery(queryKey, () =>
+    invokeWithMiddleware(getEvent, { id: ctx.params?.eventId as string }, ctx)
+  )
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  }
 }
 
 ShowEventPage.getLayout = (page) => <Layout>{page}</Layout>
