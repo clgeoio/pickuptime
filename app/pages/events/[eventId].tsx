@@ -92,7 +92,7 @@ export const Event = () => {
     <>
       <Head>
         <title>
-          {name} - {format(date, "dd/mm/yy")}
+          {name} - {format(date, "dd/MM/yy")}
         </title>
       </Head>
       <Flex direction="column">
@@ -155,11 +155,10 @@ const ShowEventPage: BlitzPage = () => {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient()
-  const queryKey = getQueryKey(getEvent)
+  const params = { id: ctx.params?.eventId as string }
+  const queryKey = getQueryKey(getEvent, params)
 
-  await queryClient.prefetchQuery(queryKey, () =>
-    invokeWithMiddleware(getEvent, { id: ctx.params?.eventId as string }, ctx)
-  )
+  await queryClient.prefetchQuery(queryKey, () => invokeWithMiddleware(getEvent, params, ctx))
 
   return {
     props: {
