@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 import { Head } from "blitz"
-import { Box, Button, Flex, Heading, useColorModeValue } from "@chakra-ui/react"
+import { Box, Button, Flex, Heading, useColorModeValue, Image } from "@chakra-ui/react"
 import { Suspense } from "react"
 import { Link, useMutation, Routes } from "blitz"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
@@ -73,9 +73,13 @@ const Layout = ({ title, children }: LayoutProps) => {
             borderColor="blackAlpha.300"
             h="14"
           >
-            <Heading size="md" color={useColorModeValue("gray.800", "white")}>
-              pickupti.me
-            </Heading>
+            <Flex>
+              <Image src="/android-chrome-192x192.png" w={7} h={7} mr={2} alt="logo" />
+              <Heading size="md" color={useColorModeValue("gray.800", "white")}>
+                pickupti.me
+              </Heading>
+            </Flex>
+
             <Flex align="center">
               <Suspense fallback="Loading...">
                 <UserInfo />
