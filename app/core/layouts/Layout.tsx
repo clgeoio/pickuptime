@@ -1,7 +1,6 @@
 import { ReactNode } from "react"
 import { Head } from "blitz"
 import { Box, Button, Flex, Heading, useColorModeValue, Image } from "@chakra-ui/react"
-import { Suspense } from "react"
 import { Link, useMutation, Routes } from "blitz"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import logout from "app/auth/mutations/logout"
@@ -78,12 +77,6 @@ const Layout = ({ title, children }: LayoutProps) => {
               <Heading size="md" color={useColorModeValue("gray.800", "white")}>
                 pickupti.me
               </Heading>
-            </Flex>
-
-            <Flex align="center">
-              <Suspense fallback="Loading...">
-                <UserInfo />
-              </Suspense>
             </Flex>
           </Flex>
 
