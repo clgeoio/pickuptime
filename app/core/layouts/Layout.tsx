@@ -10,39 +10,39 @@ type LayoutProps = {
   children: ReactNode
 }
 
-const UserInfo = () => {
-  const currentUser = useCurrentUser()
-  const [logoutMutation] = useMutation(logout)
+// const UserInfo = () => {
+//   const currentUser = useCurrentUser()
+//   const [logoutMutation] = useMutation(logout)
 
-  if (currentUser) {
-    return (
-      <>
-        <div>
-          <code>{currentUser.id}</code> <code>{currentUser.role}</code>
-        </div>
-        <Button
-          ml={2}
-          onClick={async () => {
-            await logoutMutation()
-          }}
-        >
-          Logout
-        </Button>
-      </>
-    )
-  } else {
-    return (
-      <>
-        {/* <Link href={Routes.SignupPage()}>
-          <Button>Sign Up</Button>
-        </Link> */}
-        <Link href={Routes.LoginPage()}>
-          <Button ml={3}>Login</Button>
-        </Link>
-      </>
-    )
-  }
-}
+//   if (currentUser) {
+//     return (
+//       <>
+//         <div>
+//           <code>{currentUser.id}</code> <code>{currentUser.role}</code>
+//         </div>
+//         <Button
+//           ml={2}
+//           onClick={async () => {
+//             await logoutMutation()
+//           }}
+//         >
+//           Logout
+//         </Button>
+//       </>
+//     )
+//   } else {
+//     return (
+//       <>
+//         {/* <Link href={Routes.SignupPage()}>
+//           <Button>Sign Up</Button>
+//         </Link> */}
+//         <Link href={Routes.LoginPage()}>
+//           <Button ml={3}>Login</Button>
+//         </Link>
+//       </>
+//     )
+//   }
+// }
 
 const Layout = ({ title, children }: LayoutProps) => {
   return (
