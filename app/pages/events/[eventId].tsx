@@ -36,10 +36,8 @@ import { useLocalStorage } from "app/core/hooks/useLocalStorage"
 import { format } from "date-fns"
 
 export const Event = () => {
-  const router = useRouter()
   const eventId = useParam("eventId", "string")
 
-  const [deleteEventMutation] = useMutation(deleteEvent)
   const [createParticipantMutation] = useMutation(createParticipant)
   const [deleteParticipantMutation] = useMutation(deleteParticipant)
   const [participantId, setParticipantId] = useLocalStorage(`participantId-${eventId}`)
@@ -163,20 +161,19 @@ const ShowEventPage: BlitzPage = () => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const queryClient = new QueryClient()
-  const params = { id: ctx.params?.eventId as string }
-  const queryKey = getQueryKey(getEvent, params)
+// export const getServerSideProps: GetServerSideProps = async (ctx) => {
+//   const queryClient = new QueryClient()
+//   const params = { id: ctx.params?.eventId as string }
+//   const queryKey = getQueryKey(getEvent, params)
 
-  console.log(queryKey)
-  await queryClient.prefetchQuery(queryKey, () => invokeWithMiddleware(getEvent, params, ctx))
+//   await queryClient.prefetchQuery(queryKey, () => invokeWithMiddleware(getEvent, params, ctx))
 
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  }
-}
+//   return {
+//     props: {
+//       dehydratedState: dehydrate(queryClient),
+//     },
+//   }
+// }
 
 ShowEventPage.getLayout = (page) => <Layout>{page}</Layout>
 
